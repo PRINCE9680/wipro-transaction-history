@@ -1,10 +1,9 @@
 services:
-
   nodejs:
     build: .
     container_name: nodejs-app
     ports:
-      - '3001:3000'
+      - "3001:3000"
     depends_on:
       - mongodb
     environment:
@@ -16,7 +15,7 @@ services:
     image: mongo:latest
     container_name: mongodb
     ports:
-      - '27017:27017'
+      - "27017:27017"
     volumes:
       - ./data:/data/transactionhistory
     networks:
@@ -28,7 +27,7 @@ services:
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
-      - '9090:9090'
+      - "9090:9090"
     networks:
       - monitoring-net
 
@@ -36,9 +35,17 @@ services:
     image: grafana/grafana
     container_name: grafana
     ports:
-      - '3000:3000'
+      - "3000:3000"
     networks:
       - monitoring-net
+    # enable SMTP configuration, to receive alert message on email
+    environment:
+      - GF_SMTP_ENABLED=true
+      - GF_SMTP_HOST=smtp.gmail.com:587
+      - GF_SMTP_USER=<Receipent email address>
+      - GF_SMTP_PASSWORD=<Enter your password>
+      - GF_SMTP_FROM_ADDRESS=<source email address>
+      - GF_SMTP_FROM_NAME=Grafana
 
 networks:
   monitoring-net:
